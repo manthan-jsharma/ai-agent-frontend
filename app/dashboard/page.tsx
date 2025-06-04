@@ -380,7 +380,7 @@
 // }
 "use client";
 
-import { useEffect, useState } from "react";
+import { useEffect, useState, Suspense } from "react";
 import { useRouter, useSearchParams } from "next/navigation";
 import Cookies from "js-cookie";
 import { Badge } from "@/components/ui/badge";
@@ -395,7 +395,7 @@ interface UserInterface {
   name: string | null;
 }
 
-export default function DashboardPage() {
+function DashboardContent() {
   const [user, setUser] = useState<UserInterface | null>(null);
   const [tab, setTab] = useState("inbox");
   const [watchActive, setWatchActive] = useState(true); // default true
@@ -404,7 +404,6 @@ export default function DashboardPage() {
   const router = useRouter();
   const searchParams = useSearchParams();
 
-  // Env URL
   const API_BASE_URL =
     process.env.NEXT_PUBLIC_API_BASE_URL || "http://localhost:8000";
 
@@ -497,7 +496,6 @@ export default function DashboardPage() {
             <span className="text-sm font-medium">{user.name}</span>
             <Badge variant="secondary">{user.email}</Badge>
 
-            {/* 👇 TOGGLE BUTTON NEXT TO EMAIL */}
             <label className="inline-flex items-center cursor-pointer ml-3">
               <input
                 type="checkbox"
@@ -552,5 +550,13 @@ export default function DashboardPage() {
         </Tabs>
       </main>
     </div>
+  );
+}
+
+export default function DashboardPage() {
+  return (
+    <Suspense fallback={<div>Loading dashboard...</div>}>
+      <DashboardContent />
+    </Suspense>
   );
 }
