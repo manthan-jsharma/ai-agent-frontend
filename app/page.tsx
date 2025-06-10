@@ -207,6 +207,7 @@ export default function HomePage() {
           return;
         }
         const response = await fetch(`${API_BASE_URL}/auth/status`, {
+          credentials: "include",
           headers: {
             Authorization: `Bearer ${token}`,
           },
@@ -229,7 +230,9 @@ export default function HomePage() {
 
   const handleLogin = async () => {
     try {
-      const response = await fetch(`${API_BASE_URL}/auth/login`);
+      const response = await fetch(`${API_BASE_URL}/auth/login`, {
+        credentials: "include",
+      });
       const data = await response.json();
       if (data.authorization_url) {
         window.location.href = data.authorization_url;
